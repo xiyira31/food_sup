@@ -1,0 +1,16 @@
+{
+  "mysql": {
+    "username": "root",
+    "password": "root",
+    "database": "foodsup",
+    "host": "127.0.0.1",
+    "dialect": "mysql",
+    "dialectOptions": { "decimalNumbers": true },
+    "define": {
+        "timestamps": false
+    }
+  },
+  "website": {
+    "name": "宏业配送中心"
+  }
+}
