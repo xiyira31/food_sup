@@ -71,7 +71,7 @@
     :before-close="closeModify">
     <el-form ref="modifyForm" :model="modifyProduct" :rules="rules" label-width="80px">
       <el-form-item label="名称" prop="name">
-        <el-input v-model="modifyProduct.name" class="inputStyle"></el-input>
+        {{modifyProduct.name}}
       </el-form-item>
       <el-form-item label="品类">
         <el-select v-model="modifyProduct.type" placeholder="请选择">
