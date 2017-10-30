@@ -180,7 +180,6 @@ router.post('/delete', function(req, res) {
       id: req.body.id
     }
   }).then(function(num) {
-    console.log(num)
     if (num > 0) {
       res.json({
         success: true
