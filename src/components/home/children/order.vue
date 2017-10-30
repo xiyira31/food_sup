@@ -162,6 +162,7 @@ export default {
       orderDate: Date.now(),
       orderSchool: null,
       filterText: '',
+      prevent: false,
       orderDetail: {
         product: null,
         price: null,
@@ -290,6 +291,10 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.orderDate && this.orderSchool) {
+            if (this.prevent === true) {
+              return
+            }
+            this.prevent = true
             let date = moment(this.orderDate).format('YYYY-MM-DD')
             this.$http.post('/order/create', {
               date: date + '',
@@ -305,6 +310,7 @@ export default {
                 this.$refs['ruleForm'].resetFields()
                 this.orderDetail.produce_date = null
                 this.lookup()
+                this.prevent = false
               }
             })
           } else {
