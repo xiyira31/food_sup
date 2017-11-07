@@ -10,7 +10,8 @@ router.post('/create', function(req, res) {
   models.product.findAll({
     where: {
       name: product.name,
-      spec: product.spec 
+      spec: product.spec,
+      valid: 1
     }
   }).then(results => {
     if (results.length === 0) {
