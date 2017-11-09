@@ -51,5 +51,13 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     tableName: 'print_order'
+  }, {
+    indexes: [
+      // Create a unique index on poem
+      {
+        unique: true,
+        fields: ['order', 'printNo']
+      }
+    ]
   });
 };
