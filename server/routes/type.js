@@ -117,7 +117,10 @@ router.post('/lookupTypeSummary', function(req, res) {
       },
       include: [{
         model: models.school,
-        as: '_school'
+        as: '_school',
+        where: {
+          valid: 1
+        }
       }]
     }]
   }).then(result => {
