@@ -3,7 +3,6 @@ let app = express()
 let http = require('http').Server(app)
 let logger = require('morgan');
 let cookieParser = require('cookie-parser');
-let expressSession = require('express-session')
 let bodyParser = require('body-parser');
 let path = require('path')
 let fs = require('fs')
