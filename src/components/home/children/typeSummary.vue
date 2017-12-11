@@ -104,7 +104,7 @@
           {{product.product.unit}}
         </td>
         <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="school.school.id">
-          {{getNum(product.product, school.school)}}
+          {{formatNum(getNum(product.product, school.school))}}
         </td>
         <td>
           {{formatNum(product.total)}}
@@ -362,6 +362,9 @@ export default {
       window.print()
     },
     formatNum: function (val) {
+      if (val === null) {
+        return null
+      }
       if (parseInt(val) === val) {
         return val.toFixed(0)
       }
