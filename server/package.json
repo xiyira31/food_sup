@@ -12,6 +12,7 @@
     "body-parser": "^1.15.2",
     "cookie-parser": "^1.4.3",
     "express": "^4.15.3",
+    "file-stream-rotator": "^0.2.0",
     "morgan": "^1.8.2",
     "mysql2": "^1.3.6",
     "mysqldump": "^1.4.2",
