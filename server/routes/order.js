@@ -408,14 +408,23 @@ router.post('/producerSummary', function (req, res) {
       },
       include: [{
         model: models.school,
-        as: '_school'
+        as: '_school',
+        where: {
+          valid: 1
+        }
       }]
     }, {
       model: models.producer,
-      as: '_producer'
+      as: '_producer',
+      where: {
+        valid: 1
+      }
     }, {
       model: models.product,
-      as: '_product'
+      as: '_product',
+      where: {
+        valid: 1
+      }
     }]
   }).then(result => {
     res.json({
