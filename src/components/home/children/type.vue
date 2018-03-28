@@ -123,6 +123,14 @@ export default {
     },
     addNew: function () {
       let _this = this
+      if (!_this.type.name) {
+        _this.$message({
+          showClose: true,
+          message: '品类创建失败: 请输入品类名称',
+          type: 'error'
+        })
+        return
+      }
       _this.$http.post('/type/create', _this.type).then(res => {
         if (res.data.success) {
           _this.$message({
