@@ -20,8 +20,8 @@
         </el-date-picker>
         <el-select v-model="selectTypes" multiple placeholder="请选择类型" @change="lookup">
           <el-option
-            v-for="item in types"
-            :key="item.id"
+            v-for="(item, index) in types"
+            :key="index"
             :label="item.name"
             :value="item">
           </el-option>
@@ -54,7 +54,7 @@
           统计学校：
           <el-checkbox 
             v-for="school in schools" 
-            :key="school.school.id"
+            :key="'school3+' + school.school.id"
             v-model="school.school.show"
             @change="totalChange(school)">
             {{school.school.short? school.school.short: school.school.name}}
@@ -77,7 +77,7 @@
         <td v-if="showUnit">
           单位
         </td>
-        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="school.school.id">
+        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="'school4+' + school.school.id">
           {{school.school.short? school.school.short: school.school.name}}
         </td>
         <td>
@@ -93,7 +93,7 @@
           金额
         </td>
       </tr>
-      <tr v-for="product in products" v-if="product.total > 0" :key="product.id">
+      <tr v-for="product in products" v-if="product.total > 0.00001" :key="'product-1' + product.product.id">
         <td>
           {{product.product.name}}
         </td>
@@ -103,7 +103,7 @@
         <td v-if="showUnit">
           {{product.product.unit}}
         </td>
-        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="school.school.id">
+        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="'school-1+' + school.school.id">
           {{formatNum(getNum(product.product, school.school))}}
         </td>
         <td>
@@ -128,7 +128,7 @@
         </td>
         <td v-if="showUnit">
         </td>
-        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="school.school.id">
+        <td v-for="school in schools" v-if="school.school.show && school.total > 0" :key="'school' + school.school.id">
           {{formatNum(school.total)}}
         </td>
         <td>
@@ -152,7 +152,7 @@
           {{wrapDate(start)}}<br>到<br>
           {{wrapDate(end)}}
         </td>
-        <td v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td v-for="product in products" v-if="product.total > 0" :key="'product0+' + product.id">
           {{product.product.name}}
         </td>
         <td>
@@ -163,7 +163,7 @@
         <td>
           规格
         </td>
-        <td  v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td  v-for="product in products" v-if="product.total > 0" :key="'product1+' + product.id">
           {{product.product.spec}}
         </td>
         <td>
@@ -173,17 +173,17 @@
         <td>
           单位
         </td>
-        <td  v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td  v-for="product in products" v-if="product.total > 0" :key="'product2+' + product.id">
           {{product.product.unit}}
         </td>
         <td>
         </td>
       </tr>
-      <tr v-for="school in schools" v-if="school.school.show && school.total > 0" :key="school.school.id">
+      <tr v-for="school in schools" v-if="school.school.show && school.total > 0" :key="'school0+' + school.school.id">
         <td>
           {{school.school.short? school.school.short: school.school.name}}
         </td>
-        <td v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td v-for="product in products" v-if="product.total > 0" :key="'product3+' + product.id">
           {{getNum(product.product, school.school)}}
         </td>
         <td>
@@ -194,7 +194,7 @@
         <td>
           合计
         </td>
-        <td v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td v-for="product in products" v-if="product.total > 0" :key="'product4+' + product.id">
           {{formatNum(product.total)}}
         </td>
         <td>
@@ -205,7 +205,7 @@
         <td>
           单价
         </td>
-        <td v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td v-for="product in products" v-if="product.total > 0" :key="'product5+' + product.id">
         </td>
         <td>
         </td>
@@ -214,7 +214,7 @@
         <td>
           金额
         </td>
-        <td v-for="product in products" v-if="product.total > 0" :key="product.id">
+        <td v-for="product in products" v-if="product.total > 0" :key="'product6+' + product.id">
         </td>
         <td>
         </td>

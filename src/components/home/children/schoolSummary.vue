@@ -28,7 +28,7 @@
           查询
         </el-button>
       </div>
-      <el-select v-model="orderStyle" placeholder="请选择开票样式" @change="maxChange">
+      <el-select v-model="orderStyle" placeholder="请选择开票样式">
         <el-option
           v-for="item in orderStyles"
           :key="item.id"
@@ -127,14 +127,16 @@ export default {
       })
     },
     lookup () {
-      this.$http.post('/order/printOrderSummary', {
-        start: this.start,
-        end: this.end,
-        school: this.school.id
-      }).then(res => {
-        this.schoolName = this.school.name
-        this.printOrders = res.data.print_orders
-      })
+      if (this.start && this.end && this.school) {
+        this.$http.post('/order/printOrderSummary', {
+          start: this.start,
+          end: this.end,
+          school: this.school.id
+        }).then(res => {
+          this.schoolName = this.school.name
+          this.printOrders = res.data.print_orders
+        })
+      }
     },
     coverageStyle: function (styleId) {
       return OrderStyles.find(function (v) {
