@@ -167,6 +167,14 @@ export default {
     },
     addNew: function () {
       let _this = this
+      if (!_this.school.name) {
+        _this.$message({
+          showClose: true,
+          message: '学校创建失败: 请输入学校名称',
+          type: 'error'
+        })
+        return
+      }
       _this.$http.post('/school/create', {
         school: _this.school
       }).then(res => {
