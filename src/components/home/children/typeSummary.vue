@@ -221,7 +221,7 @@
       </tr>
     </table>
     <el-button type="primary" @click="printTable" class="printTable not-print">
-      打印表单
+      打印表单<!-- 添加注释 -->
     </el-button>
   </div>
 </template>
