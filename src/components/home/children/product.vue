@@ -24,6 +24,9 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="product.name" class="inputStyle"></el-input>
       </el-form-item>
+      <el-form-item label="代码" prop="code">
+        <el-input v-model="product.code" class="inputStyle"></el-input>
+      </el-form-item>
       <el-form-item label="品类">
         <el-select v-model="product.type" placeholder="请选择">
           <el-option
@@ -72,6 +75,9 @@
     <el-form ref="modifyForm" :model="modifyProduct" :rules="rules" label-width="80px">
       <el-form-item label="名称" prop="name">
         {{modifyProduct.name}}
+      </el-form-item>
+      <el-form-item label="代码" prop="code">
+        <el-input v-model="modifyProduct.code" class="inputStyle"></el-input>
       </el-form-item>
       <el-form-item label="品类">
         <el-select v-model="modifyProduct.type" placeholder="请选择">
@@ -126,6 +132,10 @@
       label="商品名称">
     </el-table-column>
     <el-table-column
+      prop="code"
+      label="代码">
+    </el-table-column>
+    <el-table-column
       prop="_type.name"
       label="品类">
     </el-table-column>
@@ -167,6 +177,7 @@ export default {
       product: {
         id: null,
         name: '',
+        code: '',
         type: null,
         price: null,
         spec: null,
@@ -177,6 +188,7 @@ export default {
       modifyProduct: {
         id: null,
         name: '',
+        code: '',
         type: null,
         price: null,
         spec: null,
@@ -245,6 +257,7 @@ export default {
               this.$refs['addNewForm'].resetFields()
               this.product.producers = []
               this.product.shelf_life = null
+              this.product.code = null
               this.product.type = null
               this.product.spec = null
               this.product.unit = null
@@ -306,6 +319,7 @@ export default {
           let product = res.data.product
           this.modifyProduct.id = product.id
           this.modifyProduct.name = product.name
+          this.modifyProduct.code = product.code
           this.modifyProduct.shelf_life = product.shelf_life
           this.modifyProduct.spec = product.spec
           this.modifyProduct.type = product.type

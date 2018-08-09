@@ -38,6 +38,10 @@
                     label="商品">
                   </el-table-column>
                   <el-table-column
+                    prop="_product.code"
+                    label="代码">
+                  </el-table-column>
+                  <el-table-column
                     prop="price"
                     label="单价">
                   </el-table-column>
@@ -74,7 +78,13 @@
           <el-tree :data="tree" 
             default-expand-all
             :props="{
-              label: 'name',
+              label: data => {
+                let label = data.name
+                if (data.code) {
+                  label += '(' + data.code + ')'
+                }
+                return label
+              },
               children: 'products'
             }"
             :filter-node-method="filterNode" 
@@ -217,7 +227,8 @@ export default {
       if (!value) {
         return true
       }
-      return data.name.indexOf(value) !== -1
+      let codeFilter = data.code && data.code.indexOf(value) !== -1
+      return data.name.indexOf(value) !== -1 || codeFilter
     },
     handleNodeClick: function (data, node) {
       if (node.isLeaf && node.level > 1) {
