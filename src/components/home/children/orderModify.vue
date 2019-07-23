@@ -29,12 +29,12 @@
             <div>
               <table>
                 <tr>
-                  <td v-for="header in currentPriceHeader">
+                  <td v-for="header in currentPriceHeader" :key="header">
                     {{header}}
                   </td>
                 </tr>
                 <tr>
-                  <td v-for="price in currentPrices">
+                  <td v-for="(price, index) in currentPrices" :key="index">
                     <el-button @click="quickUpdate(price)" type="text">
                       {{price}}
                     </el-button>

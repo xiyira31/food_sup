@@ -81,7 +81,7 @@
               label: data => {
                 let label = data.name
                 if (data.code) {
-                  label += '(' + data.code + ')'
+                  label += '(' + combinCode(data.code ,data.code_suffix) + ')'
                 }
                 return label
               },
@@ -95,7 +95,7 @@
         <el-col :span="16" class="enter_place">
           <el-card>
             <div slot="header">
-              录入商品名：{{orderDetail.name}}
+              录入商品名：{{orderDetail.name + '(' + orderDetail.fullCode + ')'}}
             </div>
             <el-form ref="ruleForm" :model="orderDetail" :rules="rules" label-width="70px">
               <el-row>
@@ -111,9 +111,14 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="24">
+                <el-col :span="12">
                   <el-form-item label="单价" prop="price">
                     <el-input v-model.number="orderDetail.price" class="inputStyle"></el-input> 元
+                  </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                  <el-form-item label="成本" prop="cost">
+                    <el-input v-model.number="orderDetail.cost" class="inputStyle"></el-input> 元
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -176,10 +181,12 @@ export default {
       orderDetail: {
         product: null,
         price: null,
+        cost: null,
         num: null,
         fake_num: null,
         produce_date: null,
-        producer: null
+        producer: null,
+        fullCode: ''
       },
       rules: {
         price: [
@@ -223,11 +230,19 @@ export default {
     }
   },
   methods: {
+    combinCode: function (code, codeSuffix) {
+      if (code && codeSuffix) {
+        return code + '' + codeSuffix
+      } else {
+        return ''
+      }
+    },
     filterNode: function (value, data) {
       if (!value) {
         return true
       }
-      let codeFilter = data.code && data.code.indexOf(value) !== -1
+      let code = this.combinCode(data.code, data.code_suffix)
+      let codeFilter = code && code.indexOf(value) !== -1
       return data.name.indexOf(value) !== -1 || codeFilter
     },
     handleNodeClick: function (data, node) {
@@ -235,7 +250,9 @@ export default {
         let orderDetail = this.orderDetail
         orderDetail.product = data.id
         orderDetail.price = parseFloat(data.price)
+        orderDetail.fullCode = this.combinCode(data.code, data.code_suffix)
         orderDetail.name = data.name
+        orderDetail.cost = data.cost
         orderDetail.unit = data.unit
         orderDetail.spec = data.spec
         this.producers = data.producers
