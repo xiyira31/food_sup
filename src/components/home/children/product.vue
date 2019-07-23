@@ -24,6 +24,12 @@
       <el-form-item label="名称" prop="name">
         <el-input v-model="product.name" class="inputStyle"></el-input>
       </el-form-item>
+      <el-form-item label="代码" prop="code">
+        <el-input v-model="product.code" class="inputStyle"></el-input>
+      </el-form-item>
+      <el-form-item label="代码后缀" prop="code_suffix">
+        <el-input v-model="product.code_suffix" class="inputStyle"></el-input>
+      </el-form-item>
       <el-form-item label="品类">
         <el-select v-model="product.type" placeholder="请选择">
           <el-option
@@ -36,6 +42,9 @@
       </el-form-item>
       <el-form-item label="默认单价" prop="price">
         <el-input v-model.number="product.price" class="money"></el-input>元
+      </el-form-item>
+      <el-form-item label="默认成本" prop="cost">
+        <el-input v-model.number="product.cost" class="money"></el-input>元
       </el-form-item>
       <el-form-item label="规格">
         <el-input v-model="product.spec" class="inputStyle"></el-input>
@@ -73,6 +82,12 @@
       <el-form-item label="名称" prop="name">
         {{modifyProduct.name}}
       </el-form-item>
+      <el-form-item label="代码" prop="code">
+        <el-input v-model="modifyProduct.code" class="inputStyle"></el-input>
+      </el-form-item>
+      <el-form-item label="代码后缀" prop="code_suffix">
+        <el-input v-model="modifyProduct.code_suffix" class="inputStyle"></el-input>
+      </el-form-item>
       <el-form-item label="品类">
         <el-select v-model="modifyProduct.type" placeholder="请选择">
           <el-option
@@ -85,6 +100,9 @@
       </el-form-item>
       <el-form-item label="默认单价" prop="price">
         <el-input v-model.number="modifyProduct.price" class="money"></el-input>元
+      </el-form-item>
+      <el-form-item label="默认成本" prop="cost">
+        <el-input v-model.number="modifyProduct.cost" class="money"></el-input>元
       </el-form-item>
       <el-form-item label="规格">
         <el-input v-model="modifyProduct.spec" class="inputStyle"></el-input>
@@ -113,6 +131,9 @@
     <el-button type="primary" @click="modify">
       提交
     </el-button>
+    <el-button type="primary" @click="modify">
+      提交并修改价格
+    </el-button>
   </el-dialog>
   <el-table border :data="productData"
     highlight-current-row
@@ -126,12 +147,24 @@
       label="商品名称">
     </el-table-column>
     <el-table-column
+      prop="code"
+      label="代码">
+    </el-table-column>
+    <el-table-column
+      prop="code_suffix"
+      label="代码后缀">
+    </el-table-column>
+    <el-table-column
       prop="_type.name"
       label="品类">
     </el-table-column>
     <el-table-column
       prop="price"
       label="默认单价">
+    </el-table-column>
+    <el-table-column
+      prop="cost"
+      label="默认成本">
     </el-table-column>
     <el-table-column
       prop="spec"
@@ -167,8 +200,11 @@ export default {
       product: {
         id: null,
         name: '',
+        code: '',
+        code_suffix: '',
         type: null,
         price: null,
+        cost: null,
         spec: null,
         unit: null,
         shelf_life: null,
@@ -177,8 +213,11 @@ export default {
       modifyProduct: {
         id: null,
         name: '',
+        code: '',
+        code_suffix: '',
         type: null,
         price: null,
+        cost: null,
         spec: null,
         unit: null,
         shelf_life: null,
@@ -245,9 +284,12 @@ export default {
               this.$refs['addNewForm'].resetFields()
               this.product.producers = []
               this.product.shelf_life = null
+              this.product.code = null
+              this.product.code_suffix = null
               this.product.type = null
               this.product.spec = null
               this.product.unit = null
+              this.product.cost = null
               this.lookup()
             } else {
               _this.$message({
@@ -306,11 +348,14 @@ export default {
           let product = res.data.product
           this.modifyProduct.id = product.id
           this.modifyProduct.name = product.name
+          this.modifyProduct.code = product.code
+          this.modifyProduct.code_suffix = product.code_suffix
           this.modifyProduct.shelf_life = product.shelf_life
           this.modifyProduct.spec = product.spec
           this.modifyProduct.type = product.type
           this.modifyProduct.unit = product.unit
           this.modifyProduct.price = parseFloat(product.price)
+          this.modifyProduct.cost = parseFloat(product.cost)
           this.modifyProduct.producers = res.data.producers
           this.modifyShow = true
         })
@@ -330,7 +375,7 @@ export default {
       this.$refs['modifyForm'].validate((valid) => {
         if (valid) {
           if (this.modifyProduct.id) {
-            this.$http.post('/product/update', {
+            this.$http.post('/product/updateAndUpdateCost', {
               product: this.modifyProduct
             }).then(res => {
               if (res.data.success) {

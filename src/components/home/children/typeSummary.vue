@@ -95,7 +95,7 @@
       </tr>
       <tr v-for="product in products" v-if="product.total > 0.00001" :key="'product-1' + product.product.id">
         <td>
-          {{product.product.name}}
+          {{product.product.name + combinCode(product.product.code, product.product.code_suffix)}}
         </td>
         <td v-if="showSpec">
           {{product.product.spec}}
@@ -153,7 +153,7 @@
           {{wrapDate(end)}}
         </td>
         <td v-for="product in products" v-if="product.total > 0" :key="'product0+' + product.id">
-          {{product.product.name}}
+          {{product.product.name + combinCode(product.product.code, product.product.code_suffix)}}
         </td>
         <td>
           小计
@@ -252,6 +252,14 @@ export default {
     this.GetTypes()
   },
   methods: {
+    combinCode: function (code, codeSuffix) {
+      console.log(code)
+      if (code && codeSuffix) {
+        return '(' + code + '' + codeSuffix + ')'
+      } else {
+        return ''
+      }
+    },
     wrapDate: function (date) {
       return moment(date).format('YYYY-MM-DD')
     },

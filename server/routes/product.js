@@ -1,5 +1,6 @@
 var models  = require('../models');
 var express = require('express');
+const Op = require('sequelize').Op;
 var router  = express.Router();
 
 router.post('/create', function(req, res) {
@@ -68,6 +69,68 @@ router.post('/update', function(req, res) {
           })
         })
         console.log(instances)
+        models.product_producer.bulkCreate(instances).then(_ => {
+          res.json({
+            success: true
+          });
+        })
+      })
+  })
+});
+
+router.post('/updateAndUpdateCost', function(req, res) {
+  let product = req.body.product
+  let id = product.id
+  let today = new Date()
+  let year = today.getFullYear()
+  let month = today.getMonth() + 1
+  let day = today.getDate()
+  let date = new Date(year + '-' + month + '-' + day)
+  if (product.shelf_life === '') {
+    product.shelf_life = null
+  }
+  delete(product.id)
+  delete(product.created)
+  models.product.update(product, {
+    where: {
+      id: id
+    }
+  }).then(_ => {
+    models.product_producer.destroy({
+        where: {
+          product: id
+        }
+      }).then( _ => {
+        let instances = []
+        product.producers.forEach(p => {
+          instances.push({
+            product: id,
+            producer: p
+          })
+        })
+        if(product.cost){
+          models.order.findAll({
+            where: {
+              date: date
+            }
+          }).then(orders => {
+            console.log(orders)
+            let ids = []
+            orders.forEach(order => {
+              ids.push(order.id)
+            })
+            models.order_detail.update({
+              cost: product.cost
+            }, {
+              where: {
+                product: id,
+                order: {
+                  [Op.in]: ids
+                }
+              }
+            })
+          })
+        }
         models.product_producer.bulkCreate(instances).then(_ => {
           res.json({
             success: true
