@@ -318,7 +318,6 @@ router.post('/deletePrintOrders', function (req, res) {
     printOrders.forEach(printOrder => {
       orders.push(printOrder.id)
     })
-    console.log(printOrders)
     return models.order_detail.update({
       print_order: null
     }, {
@@ -350,6 +349,18 @@ router.post('/deletePrintOrders', function (req, res) {
   })
 })
 
+router.post('/modifyCost', function (req, res) {
+  let details = req.body.details
+  details.forEach(detail => {
+    delete(detail.created)
+  });
+  models.order_detail.bulkCreate(details, {updateOnDuplicate: ['cost']}).then(result => {
+    res.json({
+      success: true
+    })
+  })
+})
+
 router.post('/printOrderSummary', function (req, res) {
   let start = req.body.start
   let end = req.body.end
@@ -359,7 +370,11 @@ router.post('/printOrderSummary', function (req, res) {
       [models.sequelize.fn('sum', 
         models.sequelize
           .literal('details.price * if(details.fake_num is null, details.num, details.fake_num)')), 
-                  'amount']],
+                  'amount'],
+      [models.sequelize.fn('sum', 
+      models.sequelize
+        .literal('details.cost * if(details.fake_num is null, details.num, details.fake_num)')), 
+                'costAmount']],
     group: ['printNo'],
     order: ['printNo'],
     include: [{

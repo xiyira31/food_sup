@@ -16,7 +16,15 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: true
     },
+    code_suffix: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
     price: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
+    cost: {
       type: DataTypes.DECIMAL,
       allowNull: true
     },

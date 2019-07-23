@@ -36,6 +36,7 @@
           :value="item.id" v-show="item.id === 0 || item.show">
         </el-option>
       </el-select>
+      <el-checkbox v-model="costShow">成本</el-checkbox>
       <div>
         <table border="1" class="summaryTable">
           <tr>
@@ -44,6 +45,8 @@
             </th>
             <th colspan="2">
               {{schoolName}}
+            </th>
+            <th v-if="costShow">
             </th>
           </tr>
           <tr>
@@ -56,6 +59,9 @@
             <td>
               金额(元)
             </td>
+            <td v-if="costShow">
+              成本(元)
+            </td>
           </tr>
           <tr v-for="printOrder in filterOrders" :key="printOrder.id">
             <td>
@@ -67,6 +73,9 @@
             <td>
               {{printOrder.amount}}
             </td>
+            <td v-if="costShow">
+              {{printOrder.costAmount}}
+            </td>
           </tr>
           <tr>
             <td colspan="2">
@@ -74,6 +83,9 @@
             </td>
             <td>
               {{amount}}
+            </td>
+            <td v-if="costShow">
+              {{costAmount}}
             </td>
           </tr>
         </table>
@@ -95,7 +107,8 @@ export default {
       end: null,
       printOrders: [],
       orderStyles: OrderStyles,
-      orderStyle: 0
+      orderStyle: 0,
+      costShow: false
     }
   },
   computed: {
@@ -104,6 +117,15 @@ export default {
       this.filterOrders.forEach(printOrder => {
         if (printOrder.amount) {
           sum += parseFloat(printOrder.amount)
+        }
+      })
+      return sum.toFixed(2)
+    },
+    costAmount () {
+      let sum = 0
+      this.filterOrders.forEach(printOrder => {
+        if (printOrder.costAmount) {
+          sum += parseFloat(printOrder.costAmount)
         }
       })
       return sum.toFixed(2)

@@ -132,7 +132,7 @@
     </el-col>
   </el-row>
   <el-row class="bottomDiv">
-    <el-col :span="8" class="not-print">
+    <el-col :span="7" class="not-print">
       <el-card>
         <div slot="header">
           已打印单据
@@ -158,20 +158,41 @@
         </el-table>
       </el-card>
     </el-col>
-    <el-col :span="16" class="orderContainer">
-      <mystyle
-        :company="company"
-        :school="selectOrderSchool"
-        :printOrderNo="wrapPrintNo(printOrderNo)"
-        :details="displayNodes"
-        :orderStyle="orderStyle"
-        :orderType="orderType"
-        :deliverPerson="deliverPerson"
-        :carNum = "carNum">
-      </mystyle>
-      <el-button @click="print" type="primary" class="not-print printBtn">
-        打印配送单
-      </el-button>
+    <el-col :span="16" :offset="1" class="orderContainer">
+      <el-collapse v-model="activeNames" class="not-print">
+        <el-collapse-item title="打印配送单" name="1" class="print">
+          <div id="toBePrinted">
+            <component
+              v-bind:is="currentStyle"
+              :company="company"
+              :school="selectOrderSchool"
+              :printOrderNo="wrapPrintNo(printOrderNo)"
+              :details="displayNodes"
+              :orderStyle="orderStyle"
+              :orderType="orderType"
+              :deliverPerson="deliverPerson"
+              :carNum = "carNum">
+            </component>
+          </div>
+          
+          <el-button @click="print" type="primary" class="not-print printBtn">
+            打印配送单
+          </el-button>
+        </el-collapse-item>
+        <el-collapse-item title="成本修改" name="2">
+          <costModifyStyle
+            :printOrderNo="wrapPrintNo(printOrderNo)"
+            :details="displayNodes"
+            :orderStyle="orderStyle"
+            :orderType="orderType"
+            >
+          </costModifyStyle>
+          <el-button @click="submitCostModify" type="primary" class="not-print printBtn">
+            提交
+          </el-button>
+        </el-collapse-item>
+      </el-collapse>
+      
     </el-col>
   </el-row>
 </div>
@@ -180,13 +201,25 @@
 <script>
 import moment from 'moment'
 import mystyle from '../components/orderStyle'
+import style1 from '../components/orderStyle1'
+import style2 from '../components/orderStyle2'
+import style3 from '../components/orderStyle3'
+import style4 from '../components/orderStyle4'
+import style5 from '../components/orderStyle5'
+import style6 from '../components/orderStyle6'
+import style7 from '../components/orderStyle7'
+import style8 from '../components/orderStyle8'
+import style9 from '../components/orderStyle9'
+import style10 from '../components/orderStyle10'
+import costModifyStyle from '../components/costModifyStyle'
 import {orderStyles as OrderStyles} from '../../../config/orderStyles'
 export default {
   components: {
-    'mystyle': mystyle
+    mystyle, style1, style2, style3, style4, style5, style6, style7, style8, style9, style10, costModifyStyle
   },
   data () {
     return {
+      activeNames: '1',
       orderDate: null,
       orderSchool: null,
       schools: [],
@@ -226,6 +259,46 @@ export default {
     }
   },
   computed: {
+    currentStyle: function () {
+      let style = null
+      switch (this.orderStyle) {
+        case 1:
+          style = style1
+          break
+        case 2:
+          style = style2
+          break
+        case 3:
+          style = style3
+          break
+        case 4:
+          style = style4
+          break
+        case 5:
+          style = style5
+          break
+        case 6:
+          style = style6
+          break
+        case 7:
+          style = style7
+          break
+        case 8:
+          style = style8
+          break
+        case 9:
+          style = style9
+          break
+        case 10:
+          style = style10
+          break
+        default:
+          style = style1
+          break
+      }
+      console.log(style)
+      return style
+    },
     summary: function () {
       let total = 0
       this.selectedNodes.forEach(detail => {
@@ -303,6 +376,13 @@ export default {
         })
       }
     },
+    combinCode: function (code, codeSuffix) {
+      if (code && codeSuffix) {
+        return code + '' + codeSuffix
+      } else {
+        return ''
+      }
+    },
     generateTreeData: function (data) {
       let tree = []
       data.forEach(detail => {
@@ -315,7 +395,14 @@ export default {
         let typeOrder = type.orderBy
         let hasType = false
         let typeIndex = -1
-        detail.name = detail._product.name
+        let fullCode = this.combinCode(detail._product.code, detail._product.code_suffix)
+        if (fullCode) {
+          detail.name = detail._product.name +
+            '(' + this.combinCode(detail._product.code, detail._product.code_suffix) + ')'
+        } else {
+          detail.name = detail._product.name
+        }
+
         for (let index = 0; index < tree.length; ++index) {
           if (tree[index].id === typeId) {
             hasType = true
@@ -491,12 +578,19 @@ export default {
       }).then(res => {
         if (res.data.success && this.selectedRow) {
           this.printShow = false
-          window.print()
+          this.printDiv('toBePrinted')
           this.printShow = true
           this.printed = true
           this.fetchOrder(this.selectedRow.id)
         }
       })
+    },
+    printDiv (divName) {
+      var printContents = document.getElementById(divName).innerHTML
+      var originalContents = document.body.innerHTML
+      document.body.innerHTML = printContents
+      window.print()
+      document.body.innerHTML = originalContents
     },
     rePrint: function (printOrder) {
       this.disabledOrderStyleChange = true
@@ -569,6 +663,19 @@ export default {
       let date = moment(dateStr).format('YYYY-MM-DD')
       let index = printNo.substr(8, 3)
       return date + '-' + index
+    },
+    submitCostModify: function () {
+      this.$http.post('/order/modifyCost', {
+        details: this.displayNodes
+      }).then(res => {
+        if (res.data.success) {
+          this.$message({
+            showClose: true,
+            message: '修改成功！',
+            type: 'success'
+          })
+        }
+      })
     }
   }
 }

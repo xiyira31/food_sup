@@ -44,6 +44,10 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DECIMAL,
       allowNull: true
     },
+    cost: {
+      type: DataTypes.DECIMAL,
+      allowNull: true
+    },
     num: {
       type: DataTypes.DECIMAL,
       allowNull: true
